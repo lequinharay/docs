@@ -15,12 +15,13 @@
 <a name="introduction"></a>
 ## Introduction
 
-Instead of defining all of your request handling logic in a single `routes.php` file, you may wish to organize this behavior using Controller classes. Controllers can group related HTTP request handling logic into a class. Controllers are typically stored in the `app/Http/Controllers` directory.
+routes.phpの1ファイル内にすべてのリクエストのハンドリングロジックをすべて定義する代わりに、Controllerクラスを使って振る舞いを構成することができます。コントローラーを使うと、関連するHTTPリクエストのハンドリングロジッククラスとしてグループ化することができます。また、コントローラーは原則的には`app/Http/Controllers`ディレクトリに格納されます。
 
 <a name="basic-controllers"></a>
 ## Basic Controllers
 
-Here is an example of a basic controller class. All Laravel controllers should extend the base controller class included with the default Laravel installation:
+ここでは基本的なコントローラークラスの例を示します。すべてのLaravelコントローラーはデフォルトのLaravelによってインストールされる基底コントローラークラスを継承しなければなりません。
+
 
 	<?php namespace App\Http\Controllers;
 
@@ -29,7 +30,7 @@ Here is an example of a basic controller class. All Laravel controllers should e
 	class UserController extends Controller
 	{
 		/**
-		 * Show the profile for the given user.
+		 * 指定したユーザーのプロフィールを表示する
 		 *
 		 * @param  int  $id
 		 * @return Response
@@ -40,41 +41,42 @@ Here is an example of a basic controller class. All Laravel controllers should e
 		}
 	}
 
-We can route to the controller action like so:
+
+以下の様に書けば、コントローラーへのルーティングが可能です。
 
 	Route::get('user/{id}', 'UserController@showProfile');
 
-Now, when a request matches the specified route URI, the `showProfile` method on the `UserController` class will be executed. Of course, the route parameters will also be passed to the method.
+リクエストがここで指定されているルートURIにマッチしたら、`UserController`クラスの`showProfile`メソッドが実行されます。もちろんルートパラメーターはメソッドに渡されます。
 
 #### Controllers & Namespaces
 
-It is very important to note that we did not need to specify the full controller namespace when defining the controller route. We only defined the portion of the class name that comes after the `App\Http\Controllers` namespace "root". By default, the `RouteServiceProvider` will load the `routes.php` file within a route group containing the root controller namespace.
+これは大変重要なことですが、コントローラーのルーティングを定義する際に、コントローラーの完全な名前空間を特定する必要はないということに注意する必要があります。`App\Http\Controllers`のあとにくるクラス名の一部のみを定義することになります。デフォルトでは、`RouteServiceProvider`はroutes.phpファイルをルートコントローラーの名前空間を含むルーティンググループも一緒にロードします。
 
-If you choose to nest or organize your controllers using PHP namespaces deeper into the `App\Http\Controllers` directory, simply use the specific class name relative to the `App\Http\Controllers` root namespace. So, if your full controller class is `App\Http\Controllers\Photos\AdminController`, you would register a route like so:
+`App\Http\Controllers`ディレクトリよりも深い階層のPHP名前空間を使ってコントローラをネストしたり構成したりする場合は、単純に`App\Http\Controllers`以降の相対指定を使ってください。例えばコントローラーのフルパスが`App\Http\Controllers\Photos\AdminController`である場合は、以下のようにルーティングを登録することになります。
 
 	Route::get('foo', 'Photos\AdminController@method');
 
 #### Naming Controller Routes
 
-Like Closure routes, you may specify names on controller routes:
+クロージャーのルーティングのように、コントローラーのルーティングを指定することもできます。
 
 	Route::get('foo', ['uses' => 'FooController@method', 'as' => 'name']);
 
-Once you have assigned a name to the controller route, you can easily generate URLs to the action. To generate a URL to a controller action, use the `action` helper method. Again, we only need to specify the part of the controller class name that comes after the base `App\Http\Controllers` namespace:
+一度コントローラーのルーティングに名前を割り当てると、このアクションへのURLを簡単に生成できるようになります。コントローラーアクションへのURLを生成するには、`action`ヘルパーメソッドを使います。登録後は、`App\Http\Controllers`以降のコントローラークラス名の部分を指定するだけで良くなります。
 
 	$url = action('FooController@method');
 
 <a name="controller-middleware"></a>
 ## Controller Middleware
 
-[Middleware](/docs/{{version}}/middleware) may be assigned to the controller's routes like so:
+[Middleware](/docs/{{version}}/middleware) はコントローラーのルーティングを以下のように割り当てます。
 
 	Route::get('profile', [
 		'middleware' => 'auth',
 		'uses' => 'UserController@showProfile'
 	]);
 
-However, it is more convenient to specify middleware within your controller's constructor. Using the `middleware` method from your controller's constructor, you may easily assign middleware to the controller. You may even restrict the middleware to only certain methods on the controller class:
+ただし、コントローラーのコンストラクタ内でミドルウェアを特定してしまうほうがより簡便です。`middleware`メソッドをコントローラーのコンストラクタ内で使うと、ミドルウェアを簡単にコントローラーに割り当てられます。さらに、コントローラークラス内で、特定のメソッドのみに割り当てるような制限をかけることもできます。
 
 	class UserController extends Controller
 	{
