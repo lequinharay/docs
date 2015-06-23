@@ -514,7 +514,7 @@ The field under validation must have a different value than _field_.
 <a name="rule-digits"></a>
 #### digits:_value_
 
-The field under validation must be _numeric_ and must have an exact length of _value_.
+このバリデーションルールが適用されたフィールドは、 _numeric_ かつ _value_の長さでなければなりません。
 
 <a name="rule-digits-between"></a>
 #### digits_between:_min_,_max_
@@ -560,7 +560,7 @@ The field under validation must be included in the given list of values.
 <a name="rule-integer"></a>
 #### integer
 
-The field under validation must be an integer.
+このバリデーションルールが適用されるフィールドは整数値でなければなりません。
 
 <a name="rule-ip"></a>
 #### ip
@@ -594,14 +594,14 @@ The field under validation must not be included in the given list of values.
 <a name="rule-numeric"></a>
 #### numeric
 
-The field under validation must be numeric.
+このバリデーションルールが適用されるフィールドは、数値でなければなりません。
 
 <a name="rule-regex"></a>
 #### regex:_pattern_
 
-The field under validation must match the given regular expression.
+このバリデーションルールが適用されるフィールドは、与えられた正規表現にマッチしていなければなりません。
 
-**Note:** When using the `regex` pattern, it may be necessary to specify rules in an array instead of using pipe delimiters, especially if the regular expression contains a pipe character.
+**注意:** `regex`パターンを使うときは、パイプ区切りを使う代わりに配列でルールを指定する必要があります。これは特に、正規表現がパイプ文字を含んでいる時に必要です。
 
 <a name="rule-required"></a>
 #### required
