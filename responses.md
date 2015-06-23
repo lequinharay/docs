@@ -1,30 +1,30 @@
 # HTTP Responses
 
-- [Basic Responses](#basic-responses)
-	- [Attaching Headers To Responses](#attaching-headers-to-responses)
-	- [Attaching Cookies To Responses](#attaching-cookies-to-responses)
-- [Other Response Types](#other-response-types)
-	- [View Responses](#view-responses)
-	- [JSON Responses](#json-responses)
-	- [File Downloads](#file-downloads)
-- [Redirects](#redirects)
-	- [Redirecting To Named Routes](#redirecting-named-routes)
-	- [Redirecting To Controller Actions](#redirecting-controller-actions)
-	- [Redirecting With Flashed Session Data](#redirecting-with-flashed-session-data)
-- [Response Macros](#response-macros)
+- [基本のレスポンス](#basic-responses)
+	- [レスポンスにヘッダーを付加する](#attaching-headers-to-responses)
+	- [レスポンスにクッキーを付加する](#attaching-cookies-to-responses)
+- [その他のレスポンスタイプ](#other-response-types)
+	- [ビューレスポンス](#view-responses)
+	- [JSONレスポンス](#json-responses)
+	- [ファイルのダウンロード](#file-downloads)
+- [リダイレクト](#redirects)
+	- [定義済みルーティングへのリダイレクト](#redirecting-named-routes)
+	- [コントローラー/アクションへのリダイレクト](#redirecting-controller-actions)
+	- [flashされたセッションデータを伴ったリダイレクト](#redirecting-with-flashed-session-data)
+- [レスポンスマクロ](#response-macros)
 
 <a name="basic-responses"></a>
-## Basic Responses
+## 基本のレスポンス
 
-Of course, all routes and controllers should return some kind of response to be sent back to the user's browser. Laravel provides several different ways to return responses. The most basic response is simply returning a string from a route or controller:
+承知の通り、すべてのルートとコントローラーは何らかの種類のレスポンスをユーザーのブラウザに対して返すべきです。Laravelはレスポンスを返すための方法を複数提供しています。もっとも基本的なレスポンスはルートかコントローラーから単純に文字列を返すことです。
 
 	Route::get('/', function () {
 		return 'Hello World';
 	});
 
-The given string will automatically be converted into an HTTP response by the framework.
+渡された文字列が、フレームワークに酔って自動的にHTTPレスポンスの形式に変換されます。
 
-However, for most routes and controller actions, you will be returning a full `Illuminate\Http\Response` instance or a [view](/docs/{{version}}/views). Returning a full `Response` instance allows you to customize the response's HTTP status code and headers. A `Response` instance inherits from the `Symfony\Component\HttpFoundation\Response` class, providing a variety of methods for building HTTP responses:
+なお殆どのルートとコントローラー/アクションから返されるレスポンスは、完全な`Illuminate\Http\Response`のインスタンスか[ビュー](/docs/{{version}}/views)です。完全な`Response`インスタンスを帰す場合は、そのレスポンスのHTTPステータスコードとヘッダーをカスタマイズすることができます。`Response`インスタンスは`Symfony\Component\HttpFoundation\Response`クラスを継承しており、HTTPレスポンスを構成するための様々なメソッドを提供しています。
 
 	use Illuminate\Http\Response;
 
@@ -33,14 +33,14 @@ However, for most routes and controller actions, you will be returning a full `I
 		              ->header('Content-Type', $value);
 	});
 
-For convenience, you may also use the `response` helper:
+簡単のため、`response`ヘルパーを使うこともできます。
 
 	Route::get('home', function () {
 		return response($content, $status)
 		              ->header('Content-Type', $value);
 	});
 
-> **Note:** For a full list of available `Response` methods, check out its [API documentation](http://laravel.com/api/master/Illuminate/Http/Response.html) and the [Symfony API documentation](http://api.symfony.com/2.7/Symfony/Component/HttpFoundation/Response.html).
+> **注意:** 利用可能な`Response`メソッドの全リストは、[API documentation](http://laravel.com/api/master/Illuminate/Http/Response.html)と[Symfony API documentation](http://api.symfony.com/2.7/Symfony/Component/HttpFoundation/Response.html)から確認できます。
 
 <a name="attaching-headers-to-responses"></a>
 #### Attaching Headers To Responses
