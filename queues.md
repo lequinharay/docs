@@ -245,9 +245,9 @@ In this example, we're specifying that the job should be delayed in the queue fo
 > **Note:** The Amazon SQS service has a maximum delay time of 15 minutes.
 
 <a name="dispatching-jobs-from-requests"></a>
-### Dispatching Jobs From Requests
+### リクエストからジョブをディスパッチする
 
-It is very common to map HTTP request variables into jobs. So, instead of forcing you to do this manually for each request, Laravel provides some helper methods to make it a cinch. Let's take a look at the `dispatchFrom` method available on the `DispatchesJobs` trait. By default, this trait is included on the base Laravel controller class:
+これはHTTPリクエスト変数をジョブに割り当てるのはとても一般的なことです。したがって各リクエストごとに無理やりこれを手動で行うのでなければ、Laravelが提供しているこれを簡単に行うためのヘルパーメソッドを使うことができます。`DispatchesJobs`トレイト上で使える`dispatchFrom`メソッドを見てみましょう。デフォルトではこのトレイトは、基底のLaravelコントローラークラスに含まれています。
 
 	<?php namespace App\Http\Controllers;
 
@@ -271,9 +271,7 @@ It is very common to map HTTP request variables into jobs. So, instead of forcin
 		}
 	}
 
-This method will examine the constructor of the given job class and extract variables from the HTTP request (or any other `ArrayAccess` object) to fill the needed constructor parameters of the job. So, if our job class accepts a `productId` variable in its constructor, the job bus will attempt to pull the `productId` parameter from the HTTP request.
-
-You may also pass an array as the third argument to the `dispatchFrom` method. This array will be used to fill any constructor parameters that are not available on the request:
+このメソッドは渡されたジョブクラスのコンストラクタを実行し、HTTPリクエスト（あるいは何らかの`ArrayAccess`オブジェクト）からの変数を展開、ジョブが必要とするコンストラクタのパラメーターに渡します。例えばジョブクラスが`productId`変数をコンストラクタ内で受け取った場合、ジョブバス（job bus）はHTTPリクエストから`productId`パラメータを受け取ります。また、`dispatchFrom`メソッドに対して第三引数として配列を渡すこともできます。この配列はリクエストで利用できないコンストラクタのパラメーターを埋めるのに使われます。
 
 	$this->dispatchFrom('App\Jobs\ProcessOrder', $request, [
 		'taxPercentage' => 20,
