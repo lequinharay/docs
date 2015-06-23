@@ -1,16 +1,16 @@
 # Eloquent: Getting Started
 
-- [Introduction](#introduction)
-- [Defining Models](#defining-models)
-	- [Eloquent Model Conventions](#eloquent-model-conventions)
-- [Retrieving Multiple Models](#retrieving-multiple-models)
-- [Retrieving Single Models / Aggregates](#retrieving-single-models)
-	- [Retrieving Aggregates](#retrieving-aggregates)
-- [Inserting & Updating Models](#inserting-and-updating-models)
-	- [Basic Inserts](#basic-inserts)
-	- [Basic Updates](#basic-updates)
-	- [Mass Assignment](#mass-assignment)
-- [Deleting Models](#deleting-models)
+- [イントロダクション](#introduction)
+- [モデルの定義](#defining-models)
+	- [Eloquentモデルの規約](#eloquent-model-conventions)
+- [複数のモデルを取得する](#retrieving-multiple-models)
+- [単一のモデルを取得する / 総計する](#retrieving-single-models)
+	- [総計を取得する](#retrieving-aggregates)
+- [モデルを挿入 & 更新する](#inserting-and-updating-models)
+	- [通常の追加](#basic-inserts)
+	- [通常の更新](#basic-updates)
+	- [まとめての割り当て](#mass-assignment)
+- [モデルの削除](#deleting-models)
 	- [Soft Deleting](#soft-deleting)
 	- [Querying Soft Deleted Models](#querying-soft-deleted-models)
 - [Query Scopes](#query-scopes)
@@ -19,29 +19,29 @@
 <a name="introduction"></a>
 ## Introduction
 
-The Eloquent ORM included with Laravel provides a beautiful, simple ActiveRecord implementation for working with your database. Each database table has a corresponding "Model" which is used to interact with that table. Models allow you to query for data in your tables, as well as insert new records into the table.
+LaravelのEloquent ORMはデータベースに作用する美しくシンプルなActiveRecordの実装です。それぞれのデータベーステーブルは、それに対応するテーブルとの相互作用に使われる"モデル"を持っています。モデルを使うことでテーブルのデータに対してクエリを発行することができるし、同様にテーブルに新しいデータを挿入することもできます。
 
-Before getting started, be sure to configure a database connection in `config/database.php`. For more information on configuring your database, check out [the documentation](/docs/{{version}}/database#configuration).
+Eloquentに取り組む前に、`config/database.php`のデータベース接続設定がされていることを確認して下さい。データベース設定に関するこれ以上の情報は、[the documentation](/docs/{{version}}/database#configuration)を参照してください。
 
 <a name="defining-models"></a>
-## Defining Models
+## モデルの定義
 
-To get started, let's create an Eloquent model. Models typically live in the `app` directory, but you are free to place them anywhere that can be auto-loaded according to your `composer.json` file. All Eloquent models extend `Illuminate\Database\Eloquent\Model` class.
+手始めに、Eloquentモデルを作ってみましょう。通常モデルは`app`ディレクトリ内にあります。ただし、`composer.json`ファイルにしたがってオートロードされる場所であればどこにでも配置することができます。すべてのEloquentモデルは`Illuminate\Database\Eloquent\Model`クラスを継承しています。
 
-The easiest way to create a model instance is using the `make:model` [Artisan command](/docs/{{version}}/artisan):
+モデルインスタンスを作る最も簡単な方法は、`make:model`（[Artisanコマンド](/docs/{{version}}/artisan)）を使うことです。
 
 	php artisan make:model User
 
-If you would like to generate a [database migration](/docs/{{version}}/schema#database-migrations) when you generate the model, you may use the `--migration` or `-m` option:
+もしモデルを生成するときにあなたが[データベースマイグレーション](/docs/{{version}}/schema#database-migrations)も生成したい場合は、`--migration`か`-m`オプションで指定することができます。
 
 	php artisan make:model User --migration
 
 	php artisan make:model User -m
 
 <a name="eloquent-model-conventions"></a>
-### Eloquent Model Conventions
+### Eloquentモデルの規約
 
-Now, let's look at an example `Flight` model class, which will use to retrieve and store information from our `flights` database table:
+ここでは、`Flight`モデルクラスの例を見てみましょう。このクラスは`flights`データベーステーブルから情報を取得したり、このテーブルに情報を保存したりします。
 
 	<?php namespace App;
 
@@ -53,9 +53,9 @@ Now, let's look at an example `Flight` model class, which will use to retrieve a
 	}
 
 
-#### Table Names
+#### テーブル名
 
-Note that we did not tell Eloquent which table to use for our `Flight` model. The "snake case", plural name of the class will be used as the table name unless another name is explicitly specified. So, in this case, Eloquent will assume the `Flight` model stores records in the `flights` table. You may specify a custom table by defining a `table` property on your model:
+`Flight`モデルの為にどのテーブルを使っているかをEloquentに教えなかったことに注意してください。明示的に指定されていない限りは、クラス名を"スネークケース"で複数形にしたものががテーブル名として使われていると解釈されます。したがってここでは、Eloquentは`Flight`モデルは`flights`テーブルにデータを保存することを想定します。モデルの`table`プロパティを定義することで、ルールに沿わないテーブルを指定することができます。
 
 	<?php namespace App;
 
@@ -71,9 +71,9 @@ Note that we did not tell Eloquent which table to use for our `Flight` model. Th
 		protected $table = 'my_flights';
 	}
 
-#### Primary Keys
+#### 主キー
 
-Eloquent will also assume that each table has a primary key column named `id`. You may define a `$primaryKey` property to override this convention.
+Eloquent はそれぞれのテーブルが`id`という名前の主キーを持っていることを前提にしています。この規約は`$primaryKey`プロパティで定義することで上書きすることができます。
 
 #### Timestamps
 
@@ -110,9 +110,9 @@ If you need to customize the format of your timestamps, set the `$dateFormat` pr
 	}
 
 <a name="retrieving-multiple-models"></a>
-## Retrieving Multiple Models
+## 複数のモデルを取得する
 
-Once you have created a model and [its associated database table](/docs/{{version}}/schema), you are ready to start retrieving data from your database. Think of each Eloquent model as a powerful [query builder](/docs/{{version}}/queries) allowing you to fluently query the database table associated with the model. For example:
+一度モデルを作り、[データベースと関連付ける](/docs/{{version}}/schema)と、データベースからデータを取得する準備が整います。強力な[クエリビルダー](/docs/{{version}}/queries)としてのEloquentモデルによって、モデルと関連付けられたデータベーステーブルにクエリを投げられるようになります。例えば、
 
 	<?php namespace App\Http\Controllers;
 
@@ -142,16 +142,16 @@ If you have an Eloquent model instance, you may access the column values of the 
 		echo $flight->name;
 	}
 
-#### Adding Additional Constraints
+#### 追加の制約を付加する
 
-The Eloquent `all` method will return all of the results in the model's table. Since each Eloquent model serves as a [query builder](/docs/{{version}}/queries), you may also add constraints to queries, and then use the `get` method to retrieve the results:
+Eloquentの`all`メソッドはこのモデルのテーブルの結果をすべて返します。各々のEloquentモデルは[クエリビルダー](/docs/{{version}}/queries)を提供しているので、クエリに対して制約を付加し、`get`メソッドを使って結果を取得することが出来ます。
 
 	$flights = App\Flight::where('active', 1)
 				   ->orderBy('name', 'desc')
 				   ->take(10)
 				   ->get();
 
-> **Note:** Since Eloquent models are query builders, you should review all of the methods available on the [query builder](/docs/{{version}}/queries). You may use any of these methods in your Eloquent queries.
+> **注意:** Eloquentモデルはクエリビルダーなので、[クエリビルダー](/docs/{{version}}/queries)の項の利用可能なすべてのメソッドを確認すべきです。Eloquentクエリ内で、これらのメソッドをすべて使うことが出来ます。
 
 #### Collections
 
@@ -161,9 +161,9 @@ For Eloquent methods like `all` and `get` which retrieve multiple results, an in
 		echo $flight->name;
 	}
 
-#### Chunking Results
+#### 結果をchunkする
 
-If you need to process thousands of Eloquent records, use the `chunk` command. The `chunk` method will retrieve a "chunk" of Eloquent models, feeding them to a given `Closure` for processing. Using the `chunk` method will conserve memory when working with large result sets:
+数千件のEloquentレコードを処理する必要がある場合、`chunk`コマンドを使います。この`chunk`メソッドはEloquentモデルの"chunk"を取得して、処理の`Closure`を提供してくれます。`chunk`メソッドを用いることで、巨大な結果セットを取り扱う時でもメモリを温存することができます。
 
 	Flight::chunk(200, function ($flights) {
 		foreach ($flights as $flight) {
@@ -208,12 +208,12 @@ Of course, you may also use the query builder aggregate functions such as `count
 	$max = App\Flight::where('active', 1)->max('price');
 
 <a name="inserting-and-updating-models"></a>
-## Inserting & Updating Models
+## モデルの挿入と更新
 
 <a name="basic-inserts"></a>
-### Basic Inserts
+### 基本的な挿入
 
-To create a new record in the database, simply create a new model instance, set attributes on the model, then call the `save` method:
+データベースに新しいレコードを作るには、単純に新しいモデルインスタンスを作成し、モデルに属性値をセットし、`save`メソッドを呼びます。
 
 	<?php namespace App\Http\Controllers;
 
@@ -241,7 +241,7 @@ To create a new record in the database, simply create a new model instance, set 
 		}
 	}
 
-In this example, we simply assign the `name` parameter from the incoming HTTP request to the `name` attribute of the `App\Flight` model instance. When we call the `save` method, a record will be inserted into the database. The `created_at` and `updated_at` timestamps will automatically be set when the `save` method is called, so there is no need to set them manually.
+この例では、私達は単純にHTTPリクエストからきた`name`パラメーターを`App\Flight`モデルインスタンスの`name`属性に設定しています。`save`メソッドを呼ぶと、データベースにレコードが挿入されます。`save`メソッドが呼ばれると`created_at`と`updated_at`タイムススタンプが自動的にセットされるので、手動でこれらをセットする必要はありません。
 
 <a name="basic-updates"></a>
 ### Basic Updates
@@ -307,11 +307,11 @@ While `$fillable` serves as a "white list" of attributes that should be mass ass
 
 In the example above, all attributes **except for `price`** will be mass assignable.
 
-#### Other Creation Methods
+#### その他の作成コマンド
 
-There are two other methods you may use to create models by mass assigning attributes: `firstOrCreate` and `firstOrNew`. The `firstOrCreate` method will attempt to locate a database record using the given column / value pairs. If the model can not be found in the database, a record will be inserted with the given attributes.
+複数の属性によってモデルを作成するには、他に2つのメソッドが存在します。`firstOrCreate`と`firstOrNew`です。`firstOrCreate`メソッドは与えられたカラムと値のペアを使ってデータベースレコードを配置します。モデルがデータベース内に見つからなかった場合、レコードは与えられた属性を使って挿入されます。
 
-The `firstOrNew` method, like `firstOrCreate` will attempt to locate a record in the database matching the given attributes. However, if a model is not found, a new model instance will be returned. Note that the model returned by `firstOrNew` has not yet been persisted to the database. You will need to call `save` manually to persist it:
+`firstOrNew`メソッドは`firstOrCreate`と似た様に、与えられた属性をデータベース内でマッチングしてレコードを配置します。ただしモデルがなかった場合には、新しいモデルインスタンスを返します。`firstOrNew`が返したモデルがまだデータベースとは同期されておらず、同期するためには手動で`save`メソッドを呼ぶ必要があります。
 
 	// Retrieve the flight by the attributes, or create it if it doesn't exist...
 	$flight = App\Flight::firstOrCreate(['name' => 'Flight 10']);
