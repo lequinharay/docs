@@ -236,11 +236,12 @@ If you would like to [name](/docs/{{version}}/routing#named-routes) some of the 
 	]);
 
 <a name="dependency-injection-and-controllers"></a>
-## Dependency Injection & Controllers
+## 依存性注入とコントローラー
 
-#### Constructor Injection
+#### コンストラクタインジェクション
 
-The Laravel [service container](/docs/{{version}}/container) is used to resolve all Laravel controllers. As a result, you are able to type-hint any dependencies your controller may need in its constructor. The dependencies will automatically be resolved and injected into the controller instance:
+Laravelの[サービスコンテナ](/docs/{{version}}/container)はすべてのLaravelコントローラーの解決に使われています。結果として、コンストラクタ内でコントローラーが必要とする依存性をタイプヒンティングできるようになります。この依存性は自動的に解決され、コントローラーインスタンスに注入されます。
+
 
 	<?php namespace App\Http\Controllers;
 
@@ -266,11 +267,11 @@ The Laravel [service container](/docs/{{version}}/container) is used to resolve 
 		}
 	}
 
-Of course, you may also type-hint any [Laravel contract](/docs/{{version}}/contracts). If the container can resolve it, you can type-hint it.
+当然、あらゆる[Laravel contract](/docs/{{version}}/contracts)もタイプヒンティングすることができます。
 
-#### Method Injection
+#### メソッドインジェクション
 
-In addition to constructor injection, you may also type-hint dependencies on your controller's action methods. For example, let's type-hint the `Illuminate\Http\Request` instance on one of our methods:
+コンストラクタインジェクションに加え、コントローラーのアクションメソッドの依存性もタイプヒンティングできます。例えば`Illuminate\Http\Request`のインスタンスをメソッドのひとつに関してタイプヒンティングしてみましょう。
 
 	<?php namespace App\Http\Controllers;
 
@@ -292,8 +293,10 @@ In addition to constructor injection, you may also type-hint dependencies on you
 			//
 		}
 	}
+	
+	
+コントローラーメソッドがルーティングパラメーターからの入力も受け付ける場合、単純に依存性の後ろにルーティング引数を並べることで実現できます。
 
-If your controller method is also expecting input from a route parameter, simply list your route arguments after your other dependencies:
 
 	<?php namespace App\Http\Controllers;
 
